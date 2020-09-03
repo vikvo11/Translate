@@ -9,7 +9,7 @@ class Product(Resource):
     return{
       'product': ['Ice cream',
                   'Chocolate',
-                  'Fruit']
+                  'Fruit1']
           }
 api.add_resource(Product,'/')
 
