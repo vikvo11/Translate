@@ -26,11 +26,11 @@ class Product(Resource):
                   ]
           }
     return json.loads(json.dumps(d))
-api.add_resource(Product,'/')
+api.add_resource(Product,'/api')
 test= '''
 <html>
    <body>
-      <form action = "http://ip172-18-0-63-bt8f4u5im9m0008vnitg-5001.direct.labs.play-with-docker.com/1" method = "POST">
+      <form action = "/" method = "POST">
          <p>Eng <input type = "text" name = "Eng" /></p>
          <p>Rus <input type = "text" name = "Rus" /></p>
          
@@ -39,7 +39,7 @@ test= '''
    </body>
 </html>
 '''
-@app.route("/1", methods=['POST','GET'])
+@app.route("/", methods=['POST','GET'])
 def hello():
     if request.method == 'POST':
         transl = translator.translate(str(request.form['Eng']),dest="ru").text
