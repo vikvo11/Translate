@@ -1,5 +1,6 @@
 #Product service
-from flask import Flask
+import json
+from flask import Flask, render_template, render_template_string, request
 from flask_restful import Resource, Api
 from googletrans import Translator, constants
 from pprint import pprint
@@ -8,16 +9,45 @@ api = Api(app)
 
 translator = Translator()
 translation = translator.translate("Hola Mundo")
+translation1 = translator.translate("Hello World!", dest="ru")
+translation1 = translator.translate("Привет!", dest="en")
+res=translator.translate("Hello World BIG MAN!", dest="ru").text
+
 
 class Product(Resource):
   def get(self):
-    return{
+    d={
       'product': ['Ice cream',
                   'Chocolate',
                   'Fruit1',
-                  translation.text]
+                  translation1.text,
+                  #str(res.encode('utf8').decode("cp850"))
+                  #str(res.decode('utf8').)
+                  ]
           }
+    return json.loads(json.dumps(d))
 api.add_resource(Product,'/')
+test= '''
+<html>
+   <body>
+      <form action = "http://ip172-18-0-63-bt8f4u5im9m0008vnitg-5001.direct.labs.play-with-docker.com/1" method = "POST">
+         <p>Eng <input type = "text" name = "Eng" /></p>
+         <p>Rus <input type = "text" name = "Rus" /></p>
+         
+         <p><input type = "submit" value = "submit" /></p>
+      </form>
+   </body>
+</html>
+'''
+@app.route("/1", methods=['POST','GET'])
+def hello():
+    if request.method == 'POST':
+        transl = translator.translate(str(request.form['Eng']),dest="ru").text
+        trans2 = translator.translate(str(request.form['Rus']),dest="en").text
+        return render_template_string('{% block body %}'+test+str(transl)+str(trans2)+'{% endblock %}')
+    return render_template_string('{% block body %}'+test+res+'{% endblock %}')
 
 if __name__ == '__main__':
-  app.run(host='0.0.0.0', port=80, debug=True)
+    #print(str(res.encode('cp1252', 'ignore')))
+    #print (res)
+    app.run(host='0.0.0.0', port=80, debug=True)
