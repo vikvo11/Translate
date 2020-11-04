@@ -8,11 +8,12 @@ app = Flask(__name__)
 api = Api(app)
 
 translator = Translator()
-translation = translator.translate("Hola Mundo")
-translation1 = translator.translate("Hello World!", dest="ru")
-translation1 = translator.translate("Привет!", dest="en")
-res=translator.translate("Hello World BIG MAN!", dest="ru").text
-
+#translation1 = translator.translate("Hello World!", dest="ru")
+#translation1 = translator.translate("Привет!", dest="en")
+try:
+    res=translator.translate("Hello World BIG MAN!", dest="ru").text
+except Exception as e:
+    print(e)
 
 class Product(Resource):
   def get(self):
