@@ -10,6 +10,7 @@ api = Api(app)
 translator = Translator()
 #translation1 = translator.translate("Hello World!", dest="ru")
 #translation1 = translator.translate("Привет!", dest="en")
+res='test'
 try:
     res=translator.translate("Hello World BIG MAN!", dest="ru").text
 except Exception as e:
@@ -43,9 +44,13 @@ test= '''
 @app.route("/", methods=['POST','GET'])
 def hello():
     if request.method == 'POST':
-        transl = translator.translate(str(request.form['Eng']),dest="ru").text
-        trans2 = translator.translate(str(request.form['Rus']),dest="en").text
-        return render_template_string('{% block body %}'+test+str(transl)+str(trans2)+'{% endblock %}')
+        try:
+
+            transl = translator.translate(str(request.form['Eng']),dest="ru").text
+            trans2 = translator.translate(str(request.form['Rus']),dest="en").text
+            return render_template_string('{% block body %}'+test+str(transl)+str(trans2)+'{% endblock %}')
+        except Exception as e:
+          print (e)
     return render_template_string('{% block body %}'+test+res+'{% endblock %}')
 
 if __name__ == '__main__':
