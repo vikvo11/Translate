@@ -2,19 +2,16 @@
 import json
 from flask import Flask, render_template, render_template_string, request
 from flask_restful import Resource, Api
-from googletrans import Translator, constants
+from google_trans_new import google_translator
 from pprint import pprint
 app = Flask(__name__)
 api = Api(app)
 
-translator = Translator()
+translator = google_translator()
 #translation1 = translator.translate("Hello World!", dest="ru")
 #translation1 = translator.translate("Привет!", dest="en")
 res='test'
-try:
-    res=translator.translate("Hello World BIG MAN!", dest="ru").text
-except Exception as e:
-    print(e)
+res=translator.translate("Hello World BIG MAN!",lang_src='en',lang_tgt='ru')
 
 class Product(Resource):
   def get(self):
@@ -44,13 +41,9 @@ test= '''
 @app.route("/", methods=['POST','GET'])
 def hello():
     if request.method == 'POST':
-        try:
-
-            transl = translator.translate(str(request.form['Eng']),dest="ru").text
-            trans2 = translator.translate(str(request.form['Rus']),dest="en").text
-            return render_template_string('{% block body %}'+test+str(transl)+str(trans2)+'{% endblock %}')
-        except Exception as e:
-          print (e)
+        transl = translator.translate(str(request.form['Eng']),lang_src='en',lang_tgt='ru')
+        trans2 = translator.translate(str(request.form['Rus']),lang_src='ru',lang_tgt='en')
+        return render_template_string('{% block body %}'+test+str(transl)+str(trans2)+'{% endblock %}')
     return render_template_string('{% block body %}'+test+res+'{% endblock %}')
 
 if __name__ == '__main__':
